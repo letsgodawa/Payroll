@@ -29,6 +29,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         } else if (item.getItemId() == R.id.search) {
             onBackPressed();
             return true;
+
         } else
             return super.onOptionsItemSelected(item);
     }

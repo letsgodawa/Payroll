@@ -22,6 +22,7 @@ public class CategoryActivity extends AppCompatActivity {
         setContentView(R.layout.activity_category);
         initToolbar();
         findViews();
+        setData();
         initRecyclerView();
     }
 
@@ -38,9 +39,17 @@ public class CategoryActivity extends AppCompatActivity {
 
     private void setData(){
         Category cate1= new Category();
-        cate1.setTitle("Food");
-        cate1.setDescription("Food bjchjkhdka");
+        Category cate2= new Category();
+        Category cate3= new Category();
+        cate1.setTitle("Non-Veg Restaurant");
+        cate2.setTitle("Veg Restaurant");
+        cate3.setTitle("Drinks");
+        cate1.setDescription("Order your favorite food from Restaurant.");
+        cate2.setDescription("Pure vegetarian Restaurant");
+        cate3.setDescription("Drinks home delivery.");
         categoryList.add(cate1);
+        categoryList.add(cate2);
+        categoryList.add(cate3);
 
     }
 

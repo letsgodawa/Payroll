@@ -16,6 +16,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.sujan.myapplication.category.CategoryActivity;
+
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
     private EditText edtEmailAddress, edtPassword;
     private Button btnSubmit;
@@ -87,7 +89,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     @Override
     public void onClick(View view) {
         if (view.getId() == R.id.btnSubmit) {
-            Intent intent = new Intent(this, MainActivity.class);
+            Intent intent = new Intent(this, CategoryActivity.class);
             intent.putExtra("Name", "LoginActivity");
             startActivity(intent);
             finish();

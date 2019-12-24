@@ -18,6 +18,16 @@
         <!--            android:scaleType="fitXY"-->
         <!--            android:src="@drawable/namaste" />-->
         <EditText
+            android:hint="Username"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:inputType="number"
+            android:maxLength="4"
+            android:singleLine="true"
+            android:textColorHint="#000067"
+            android:textSize="14sp" />
+
+        <EditText
             android:id="@+id/edtEmail"
             android:hint="EmailAddress"
             android:inputType="textEmailAddress"

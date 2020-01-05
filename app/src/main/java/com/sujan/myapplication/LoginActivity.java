@@ -1,11 +1,18 @@
 package com.sujan.myapplication;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
 
+import android.Manifest;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -17,6 +24,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.sujan.myapplication.category.CategoryActivity;
+import com.sujan.myapplication.home.DashboardActivity;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
     private EditText edtEmailAddress, edtPassword;
@@ -28,8 +36,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         if (item.getItemId() == android.R.id.home) {
             startActivity(new Intent(this, MainActivity.class));
             return true;
-        } else if (item.getItemId() == R.id.search) {
-            onBackPressed();
+        } else if (item.getItemId() == R.id.call) {
+            checkCallPermission();
             return true;
 
         } else
@@ -39,8 +47,64 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.toolbar_menu, menu);
+        inflater.inflate(R.menu.toolbar_call, menu);
         return true;
+    }
+
+    private void checkCallPermission() {
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+            //   is not granted
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.CALL_PHONE)) {
+                AlertDialog alertDialog = new AlertDialog.Builder(LoginActivity.this, R.style.DialogTheme)
+                        .setTitle("Call Permission Needed")
+                        .setMessage("This app needs the Call  permission permission , please accept to use Call functionality")
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                Intent intent = new Intent();
+                                intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                                Uri uri = Uri.fromParts("package", "com.sujan.myapplication", null);
+                                intent.setData(uri);
+                                startActivity(intent);
+                            }
+                        })
+                        .create();
+                alertDialog.setCancelable(false);
+                alertDialog.show();
+            } else {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CALL_PHONE}, 1);
+            }
+        } else {
+            Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + "9864831976"));
+            startActivity(intent);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case 1:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    if (ActivityCompat.checkSelfPermission(this,
+                            Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED) {
+                        Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + "9864831976"));
+                        startActivity(intent);
+                    }
+                } else {
+                    if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.CALL_PHONE)) {
+                        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CALL_PHONE}, 1);
+                    } else {
+                        Intent intent = new Intent();
+                        intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                        Uri uri = Uri.fromParts("package", "com.sujan.myapplication", null);
+                        intent.setData(uri);
+                        startActivity(intent);
+                    }
+                }
+        }
+
+
     }
 
     @Override

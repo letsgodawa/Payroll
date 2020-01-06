@@ -7,6 +7,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -22,6 +23,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.sujan.myapplication.category.CategoryActivity;
 import com.sujan.myapplication.home.DashboardActivity;
@@ -29,6 +31,8 @@ import com.sujan.myapplication.home.DashboardActivity;
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
     private EditText edtEmailAddress, edtPassword;
     private Button btnSubmit;
+    private Dialog originalDialog;
+    private AlertDialog.Builder alertDialogBuilder;
     private Toolbar toolbar;
 
     @Override
@@ -153,13 +157,33 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     @Override
     public void onClick(View view) {
         if (view.getId() == R.id.btnSubmit) {
-            Intent intent = new Intent(this, CategoryActivity.class);
-            intent.putExtra("Name", "LoginActivity");
-            startActivity(intent);
-            finish();
+            selectImage();
+//            Intent intent = new Intent(this, CategoryActivity.class);
+//            intent.putExtra("Name", "LoginActivity");
+//            startActivity(intent);
+//            finish();
         } else if (view.getId() == R.id.edtPassword) {
             Log.d("EditPassword", "Edit password has new state.");
         }
 
+    }
+
+    private void selectImage() {
+        alertDialogBuilder = new AlertDialog.Builder(this);
+        View dialogView = View.inflate(this, R.layout.upload_photo, null);
+        TextView txtTakePhoto = dialogView.findViewById(R.id.txtTakePhoto);
+        TextView txtChooseGallery = dialogView.findViewById(R.id.txtChooseGallery);
+        TextView txtCancel = dialogView.findViewById(R.id.txtCancel);
+        alertDialogBuilder.setView(dialogView);
+        originalDialog = alertDialogBuilder.create();
+        txtCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                originalDialog.dismiss();
+            }
+        });
+        originalDialog.getWindow().setDimAmount(0.7f);
+        originalDialog.setCanceledOnTouchOutside(true);
+        originalDialog.show();
     }
 }

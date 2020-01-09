@@ -26,6 +26,9 @@
         android:id="@+id/lytTab"
         android:background="#2196F3"
         android:layout_height="wrap_content"
+        app:tabIndicatorColor="@android:color/white"
+        app:tabSelectedTextColor="@android:color/white"
+
         android:layout_width="match_parent" />
 
     <androidx.viewpager.widget.ViewPager

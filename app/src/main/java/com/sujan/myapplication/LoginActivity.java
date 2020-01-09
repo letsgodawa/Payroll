@@ -97,7 +97,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CALL_PHONE}, 1);
             }
         } else {
-            Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + "9864831976"));
+            Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + "9864831976"));
             startActivity(intent);
         }
     }
@@ -127,8 +127,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 100);
             }
         } else {
-            Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + "9864831976"));
-            startActivity(intent);
+            openCamera();
         }
     }
 
@@ -139,7 +138,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     if (ActivityCompat.checkSelfPermission(this,
                             Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED) {
-                        Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + "9864831976"));
+                        Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + "9864831976"));
                         startActivity(intent);
                     }
                 } else {

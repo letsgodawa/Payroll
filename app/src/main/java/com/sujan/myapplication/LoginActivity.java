@@ -161,6 +161,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                             Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
 //                        Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + "9864831976"));
 //                        startActivity(intent);
+                        openCamera();
                     }
                 } else {
                     if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.CAMERA) ||

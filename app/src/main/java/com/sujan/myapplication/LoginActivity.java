@@ -51,6 +51,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private ImageView imgPhoto;
     private Uri picUri;
     private String currentImagePath;
+    private Bitmap bitmap;
+    private String type = "";
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
@@ -127,7 +129,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 100);
             }
         } else {
-            openCamera();
+            if (type == "Camera")
+                openCamera();
+            else
+                openGallery();
         }
     }
 
@@ -161,7 +166,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                             Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
 //                        Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + "9864831976"));
 //                        startActivity(intent);
-                        openCamera();
+                        if (type == "Camera")
+                            openCamera();
+                        else
+                            openGallery();
                     }
                 } else {
                     if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.CAMERA) ||
@@ -181,6 +189,16 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
 
 
+    }
+
+    private void openGallery() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+            Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            startActivityForResult(intent, 200);
+        } else {
+            checkImagePermission();
+        }
     }
 
     private void openCamera() {
@@ -228,6 +246,20 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 }
                 imgPhoto.setImageBitmap(bitmap);
             }
+        } else if (requestCode == 200) {
+            if (resultCode == RESULT_OK) {
+                if (data != null) {
+                    picUri = data.getData();
+                    try {
+                        bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), picUri);
+                        imgPhoto.setImageBitmap(bitmap);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+            }
+
         }
     }
 
@@ -314,8 +346,17 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         txtTakePhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                type = "Camera";
                 originalDialog.dismiss();
                 openCamera();
+            }
+        });
+        txtChooseGallery.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                type = "Gallery";
+                originalDialog.dismiss();
+                openGallery();
             }
         });
         originalDialog = alertDialogBuilder.create();

@@ -21,6 +21,7 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.provider.Settings;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
@@ -34,6 +35,7 @@ import android.widget.TextView;
 
 import com.sujan.myapplication.category.CategoryActivity;
 import com.sujan.myapplication.home.DashboardActivity;
+import com.sujan.myapplication.util.Prefs;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -325,11 +327,18 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     @Override
     public void onClick(View view) {
         if (view.getId() == R.id.btnSubmit) {
-            selectImage();
-//            Intent intent = new Intent(this, CategoryActivity.class);
-//            intent.putExtra("Name", "LoginActivity");
-//            startActivity(intent);
-//            finish();
+            if (!TextUtils.isEmpty(edtEmailAddress.getText()) && !TextUtils.isEmpty(edtPassword.getText())) {
+                Prefs prefs = new Prefs(this);
+                prefs.saveString("EmailAddress", edtEmailAddress.getText().toString().trim());
+                prefs.saveString("Password", edtPassword.getText().toString().trim());
+                prefs.saveBoolean("IsLogin", true);
+                Intent intent = new Intent(this, CategoryActivity.class);
+                intent.putExtra("Name", "LoginActivity");
+                startActivity(intent);
+                finish();
+            }
+//            selectImage();
+//
         } else if (view.getId() == R.id.edtPassword) {
             Log.d("EditPassword", "Edit password has new state.");
         }

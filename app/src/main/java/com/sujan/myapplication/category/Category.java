@@ -1,7 +1,12 @@
 package com.sujan.myapplication.category;
 
-public class Category {
-    public  String title;
+import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
+
+public class Category extends RealmObject {
+    @PrimaryKey
+    public int id = 0;
+    public String title;
     public String description;
 
     public String getTitle() {

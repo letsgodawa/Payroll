@@ -11,6 +11,9 @@ import android.os.Bundle;
 import com.sujan.myapplication.R;
 
 import java.util.ArrayList;
+import java.util.Random;
+
+import io.realm.Realm;
 
 public class CategoryActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
@@ -40,6 +43,7 @@ public class CategoryActivity extends AppCompatActivity {
     }
 
     private void setData() {
+        Random rand = new Random();
         Category cate1 = new Category();
         Category cate4 = new Category();
         Category cate2 = new Category();
@@ -47,7 +51,14 @@ public class CategoryActivity extends AppCompatActivity {
         Category cate3 = new Category();
         Category cate6 = new Category();
         cate1.setTitle("Non-Veg Restaurant");
+        cate1.setId(rand.nextInt(1000));
         cate4.setTitle("Non-Veg Restaurant");
+        cate2.setId(rand.nextInt(1000));
+        cate3.setId(rand.nextInt(1000));
+        cate4.setId(rand.nextInt(1000));
+        cate5.setId(rand.nextInt(1000));
+        cate6.setId(rand.nextInt(1000));
+
         cate2.setTitle("Veg Restaurant");
         cate5.setTitle("Veg Restaurant");
         cate3.setTitle("Drinks");
@@ -64,6 +75,7 @@ public class CategoryActivity extends AppCompatActivity {
         categoryList.add(cate4);
         categoryList.add(cate5);
         categoryList.add(cate6);
+        saveDataDb();
 //        adapter.notifyDataSetChanged();
 
     }
@@ -74,5 +86,12 @@ public class CategoryActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(layoutManager);
         adapter = new CategoryAdapter(categoryList);
         recyclerView.setAdapter(adapter);
+    }
+
+    private void saveDataDb(){
+        Realm realm= Realm.getDefaultInstance();
+        realm.beginTransaction();
+        realm.copyToRealmOrUpdate(categoryList);
+        realm.commitTransaction();
     }
 }

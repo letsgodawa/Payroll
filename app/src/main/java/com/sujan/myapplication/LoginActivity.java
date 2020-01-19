@@ -32,6 +32,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.sujan.myapplication.category.CategoryActivity;
 import com.sujan.myapplication.home.DashboardActivity;
@@ -43,6 +44,10 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import io.realm.Realm;
+import io.realm.RealmObject;
+import io.realm.RealmQuery;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
     private EditText edtEmailAddress, edtPassword;
@@ -328,14 +333,13 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     public void onClick(View view) {
         if (view.getId() == R.id.btnSubmit) {
             if (!TextUtils.isEmpty(edtEmailAddress.getText()) && !TextUtils.isEmpty(edtPassword.getText())) {
-                Prefs prefs = new Prefs(this);
-                prefs.saveString("EmailAddress", edtEmailAddress.getText().toString().trim());
-                prefs.saveString("Password", edtPassword.getText().toString().trim());
-                prefs.saveBoolean("IsLogin", true);
-                Intent intent = new Intent(this, CategoryActivity.class);
-                intent.putExtra("Name", "LoginActivity");
-                startActivity(intent);
-                finish();
+//                Prefs prefs = new Prefs(this);
+//                prefs.saveString("EmailAddress", edtEmailAddress.getText().toString().trim());
+//                prefs.saveString("Password", edtPassword.getText().toString().trim());
+//                prefs.saveBoolean("IsLogin", true);
+                getDataDb(edtEmailAddress.getText().toString().trim(), edtPassword.getText().toString().trim());
+
+
             }
 //            selectImage();
 //
@@ -378,5 +382,22 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         originalDialog.getWindow().setDimAmount(0.7f);
         originalDialog.setCanceledOnTouchOutside(true);
         originalDialog.show();
+    }
+
+    private void getDataDb(String email, String password) {
+        Realm realm = Realm.getDefaultInstance();
+        realm.beginTransaction();
+        User user = realm.where(User.class).equalTo("email", email).equalTo("password", password).findFirst();
+        if (user != null) {
+            Toast.makeText(this, "Login Successfully", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(this, CategoryActivity.class);
+            intent.putExtra("Name", "LoginActivity");
+            startActivity(intent);
+            finish();
+        }
+        else{
+            Toast.makeText(this, "Invalid email and password", Toast.LENGTH_SHORT).show();
+        }
+        realm.commitTransaction();
     }
 }
